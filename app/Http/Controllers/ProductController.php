@@ -17,7 +17,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $products = Product::get();
+        echo '<pre>'; print_r($products); echo '</pre>';
+        die();
+        return view('products.index', compact(
+            'products', $products,
+        ));
     }
 
     /**
