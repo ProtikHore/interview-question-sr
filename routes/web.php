@@ -22,6 +22,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/image', 'ProductController@image')->name('image');
+
     Route::resource('product-variant', 'VariantController');
     Route::resource('product', 'ProductController');
     Route::resource('blog', 'BlogController');

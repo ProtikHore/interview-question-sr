@@ -15,7 +15,9 @@
                 </div>
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-
+                        {{-- @foreach ($variants as $variant)
+                            <option value="{{$variant->id}}">{{ $variant->variant }}</option>
+                        @endforeach --}}
                     </select>
                 </div>
 
@@ -60,15 +62,18 @@
                             <td>
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
 
-                                    <dt class="col-sm-3 pb-0">
-                                        SM/ Red/ V-Nick
-                                    </dt>
-                                    <dd class="col-sm-9">
-                                        <dl class="row mb-0">
-                                            <dt class="col-sm-4 pb-0">Price : {{ number_format(200,2) }}</dt>
-                                            <dd class="col-sm-8 pb-0">InStock : {{ number_format(50,2) }}</dd>
-                                        </dl>
-                                    </dd>
+                                    @foreach ($product->productVariantPrice as $variant)
+                                        <dt class="col-sm-3 pb-0">
+                                            {{ $variant->productVariantOne->variant }}/ {{ $variant->productVariantTwo->variant }}/ {{ $variant->productVariantThree === NULL ? '' : $variant->productVariantThree->variant }}
+                                        </dt>
+
+                                        <dd class="col-sm-9">
+                                            <dl class="row mb-0">
+                                                <dt class="col-sm-4 pb-0">Price : {{ number_format($variant->price, 2) }}</dt>
+                                                <dd class="col-sm-8 pb-0">InStock : {{ number_format($variant->stock, 2) }}</dd>
+                                            </dl>
+                                        </dd>
+                                    @endforeach
                                 </dl>
                                 <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
                             </td>
@@ -90,13 +95,21 @@
         <div class="card-footer">
             <div class="row justify-content-between">
                 <div class="col-md-6">
-                    <p>Showing 1 to 10 out of 100</p>
+                    <p>Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} out of {{ $products->total() }}</p>
                 </div>
-                <div class="col-md-2">
-
+                <div class="col-md-3">
+                    {{ $products->links() }}
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        var products = {!! json_encode($products) !!};
+        console.log(products);
+
+        var variants = {!! json_encode($variants) !!};
+        console.log(variants);
+    </script>
 
 @endsection

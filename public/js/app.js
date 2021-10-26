@@ -2038,11 +2038,12 @@ __webpack_require__.r(__webpack_exports__);
       }],
       product_variant_prices: [],
       dropzoneOptions: {
-        url: 'https://httpbin.org/post',
+        url: '/image',
         thumbnailWidth: 150,
+        addRemoveLinks: true,
         maxFilesize: 0.5,
         headers: {
-          "My-Awesome-Header": "header value"
+          "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content
         }
       }
     };
@@ -2097,6 +2098,14 @@ __webpack_require__.r(__webpack_exports__);
         return ans.concat(self.getCombn(arr.slice(1), pre + value + '/'));
       }, []);
       return ans;
+    },
+    //image
+    uploadSuccess: function uploadSuccess(file, response) {
+      console.log('File Successfully Uploaded with file name: ' + response.file);
+      this.images = response.file;
+    },
+    uploadError: function uploadError(file, message) {
+      console.log('An Error Occurred');
     },
     // store product into database
     saveProduct: function saveProduct() {
@@ -50645,7 +50654,15 @@ var render = function() {
             [
               _c("vue-dropzone", {
                 ref: "myVueDropzone",
-                attrs: { id: "dropzone", options: _vm.dropzoneOptions }
+                attrs: {
+                  id: "dropzone",
+                  options: _vm.dropzoneOptions,
+                  useCustomSlot: true
+                },
+                on: {
+                  "vdropzone-success": _vm.uploadSuccess,
+                  "vdropzone-error": _vm.uploadError
+                }
               })
             ],
             1

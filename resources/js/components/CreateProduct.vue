@@ -24,7 +24,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Media</h6>
                     </div>
                     <div class="card-body border">
-                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" :useCustomSlot="true" v-on:vdropzone-success="uploadSuccess" v-on:vdropzone-error="uploadError"></vue-dropzone>
                     </div>
                 </div>
             </div>
@@ -126,10 +126,13 @@ export default {
             ],
             product_variant_prices: [],
             dropzoneOptions: {
-                url: 'https://httpbin.org/post',
+                url: '/image',
                 thumbnailWidth: 150,
+                addRemoveLinks: true,
                 maxFilesize: 0.5,
-                headers: {"My-Awesome-Header": "header value"}
+                headers: {
+                "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content
+               }
             }
         }
     },
@@ -177,6 +180,14 @@ export default {
             return ans;
         },
 
+        //image
+        uploadSuccess(file, response) {
+            console.log('File Successfully Uploaded with file name: ' + response.file);
+            this.images = response.file;
+        },
+        uploadError(file, message) {
+            console.log('An Error Occurred');
+        },
         // store product into database
         saveProduct() {
             let product = {
