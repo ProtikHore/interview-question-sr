@@ -110,13 +110,17 @@ export default {
         variants: {
             type: Array,
             required: true
+        },
+        producteditdata: {
+            type: Object,
+            required: true
         }
     },
     data() {
         return {
-            product_name: '',
-            product_sku: '',
-            description: '',
+            product_name: this.producteditdata.title,
+            product_sku: this.producteditdata.sku,
+            description: this.producteditdata.description,
             images: [],
             product_variant: [
                 {
@@ -124,7 +128,7 @@ export default {
                     tags: []
                 }
             ],
-            product_variant_prices: [],
+            product_variant_prices: this.producteditdata.product_variant_price,
             dropzoneOptions: {
                 url: '/image',
                 thumbnailWidth: 150,
@@ -142,16 +146,19 @@ export default {
             let all_variants = this.variants.map(el => el.id)
             let selected_variants = this.product_variant.map(el => el.option);
             let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 == entry2))
-            // console.log(available_variants)
+            console.log(available_variants)
 
             this.product_variant.push({
                 option: available_variants[0],
                 tags: []
             })
+            console.log(this.product_variant)
         },
 
         // check the variant and render all the combination
         checkVariant() {
+            // let tags = [];
+            // this.product_variant_prices = [];
             let tags = [];
             this.product_variant_prices = [];
             this.product_variant.filter((item) => {
@@ -202,8 +209,8 @@ export default {
 
             axios.post('/product', product).then(response => {
                 console.log(response.data);
-                alert(response.data);
-                location.reload();
+                // alert(response.data);
+                // location.reload();
             }).catch(error => {
                 console.log(error);
             })
@@ -214,6 +221,7 @@ export default {
 
     },
     mounted() {
+        console.log(this.producteditdata);
         console.log('Component mounted.')
     }
 }

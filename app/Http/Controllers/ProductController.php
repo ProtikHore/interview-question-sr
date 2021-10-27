@@ -24,8 +24,8 @@ class ProductController extends Controller
         // $variants = ProductVariant::with('variant')->select('variant_id', 'variant')->distinct()->get()->groupBy('variant_id');
         $products = Product::with('productVariantPrice.productVariantOne', 'productVariantPrice.productVariantTwo', 'productVariantPrice.productVariantThree')->paginate(2);
         return view('products.index', compact(
-            'products', $products,
-            'variants', $variants
+            'products',
+            'variants'
         ));
     }
 
@@ -103,10 +103,16 @@ class ProductController extends Controller
      * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($product)
     {
         $variants = Variant::all();
-        return view('products.edit', compact('variants'));
+        $productEditData = Product::with('productVariantPrice.productVariantOne', 'productVariantPrice.productVariantTwo', 'productVariantPrice.productVariantThree')->where('id', $product)->first();
+        // echo '<pre>'; print_r($productEditData); echo '</pre>';
+        // die();
+        return view('products.edit', compact(
+            'variants',
+            'productEditData'
+        ));
     }
 
     /**
